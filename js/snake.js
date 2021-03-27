@@ -8,6 +8,7 @@ let dx =10;
 let dy=0;
 let food_x;
 let food_y;
+let score = 0;
 //Generate the initial snake
 //Snakes head 200 to tail 160 (4 parts)
 let snake = [  {x: 200, y: 200},  {x: 190, y: 200},  {x: 180, y: 200},  {x: 170, y: 200},  {x: 160, y: 200}];
@@ -80,6 +81,10 @@ function moveSnake(){
     const has_eaten_food = snake[0].x === food_x && snake[0].y === food_y;
 
     if (has_eaten_food) {
+        // Increase score
+        score += 10;
+        // Display score on screen
+        document.getElementById('score').innerHTML = score;
         // Generate new food location
         generateFood();
       } else {

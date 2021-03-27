@@ -14,10 +14,12 @@
     </section>
 
     <section class="game">
-        <canvas class="game__board" id="gameBoard"width="400" height="400">
-        </canvas>
-        <button type="button" id="start">Start</button> <!-- To start the game -->
-        <button type="button" id="retry">Retry</button> <!-- To start the game -->
+        <div id="score" class="score">0</div>
+        <canvas class="game__board" id="gameBoard"width="400" height="400">        </canvas>
+        <section class="user-interaction">
+            <button type="button" id="start">Start</button> <!-- To start the game -->
+            <button type="button" id="retry">Retry</button> <!-- To retry the game -->
+        </section>
      </section>
 </body>
 <script src="./js/snake.js"></script> 
