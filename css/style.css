@@ -99,3 +99,7 @@ button {
     text-align: center;
     margin: 15px
 }
+
+.game button {
+    flex-direction: row;
+}
