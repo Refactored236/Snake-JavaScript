@@ -6,6 +6,8 @@ const board_border = 'black';
 const board_background = "white";
 let dx =10;
 let dy=0;
+let food_x;
+let food_y;
 //Generate the initial snake
 //Snakes head 200 to tail 160 (4 parts)
 let snake = [  {x: 200, y: 200},  {x: 190, y: 200},  {x: 180, y: 200},  {x: 170, y: 200},  {x: 160, y: 200}];
@@ -13,7 +15,7 @@ let snake = [  {x: 200, y: 200},  {x: 190, y: 200},  {x: 180, y: 200},  {x: 170,
 clearCanvas();
 
 function main(){
-    
+    // document.getElementById('start').style.visibility = "hidden";
     if(has_game_ended()) {
         return;
     } 
@@ -21,6 +23,7 @@ function main(){
     setTimeout(function onTick()
     {
         clearCanvas();
+        drawFood();
         moveSnake();
         drawSnake();
         main();
@@ -32,6 +35,7 @@ function restart(){
     if(has_game_ended()) {
         dx =10;
         dy=0;
+        generateFood();
         snake = [  {x: 200, y: 200},  {x: 190, y: 200},  {x: 180, y: 200},  {x: 170, y: 200},  {x: 160, y: 200}];
         main();
     }
@@ -41,13 +45,13 @@ function restart(){
 document.getElementById('start').addEventListener('click', () => {main()});
 
 document.addEventListener("keydown", changeDirection);
-
+generateFood();
 document.getElementById('retry').addEventListener('click', () => {restart()} );
 
 // Draw a rectangle for each set of coordinates
 function drawSnakePart(snakePart)
 {
-    gameBoard_ctx.fillStyle = 'lightblue';
+    gameBoard_ctx.fillStyle = 'orange';
     gameBoard_ctx.strokestyle = 'darkblue';
     gameBoard_ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
     gameBoard_ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
@@ -72,7 +76,16 @@ function clearCanvas() {
 function moveSnake(){
     const head = {x: snake[0].x + dx, y: snake[0].y + dy};
     snake.unshift(head); //Adds to front of array
-    snake.pop(); //removes last element in array i.e. moving the snake (on the x axis)
+
+    const has_eaten_food = snake[0].x === food_x && snake[0].y === food_y;
+
+    if (has_eaten_food) {
+        // Generate new food location
+        generateFood();
+      } else {
+        // Remove the last part of snake body
+        snake.pop();
+      }
 }
 
 function changeDirection(event)
@@ -129,3 +142,25 @@ function has_game_ended()
     return hitLeftWall ||  hitRightWall || hitToptWall || hitBottomWall
 }
 
+function randomFood(min, max)
+{
+    return Math.round((Math.random() * (max-min) + min) / 10 ) * 10;
+}
+
+function generateFood()
+{
+    food_x = randomFood(0, gameBoard.width -10);
+    food_y = randomFood(0, gameBoard.height - 10);
+    snake.forEach(function hasSnakeEatenFood(part){
+        const has_eaten = part.x == food_x && part.y == food_y;
+        if(has_eaten) generateFood();
+    });
+}
+
+function drawFood()
+{
+    gameBoard_ctx.fillStyle = 'lightgreen';
+    gameBoard_ctx.strokestyle = 'darkgreen';
+    gameBoard_ctx.fillRect(food_x, food_y, 10, 10);
+    gameBoard_ctx.strokeRect(food_x, food_y, 10, 10);
+}
