@@ -97,7 +97,7 @@ button {
     color:var(--clr-light);
     border: none;
     padding: 15px 35px;
-    width: 10vw;
+    width: 7em;
     font-size: var(--fs-h3);
     text-align: center;
     margin: 15px
