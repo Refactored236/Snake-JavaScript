@@ -4,7 +4,7 @@ const gameBoard = document.getElementById("gameBoard");
 const gameBoard_ctx = gameBoard.getContext("2d");
 const board_border = 'black';
 const board_background = "white";
-let dx =10;
+let dx =20;
 let dy=0;
 let food_x;
 let food_y;
@@ -18,9 +18,10 @@ clearCanvas();
 function main(){
     // document.getElementById('start').style.visibility = "hidden";
     if(has_game_ended()) {
+        document.getElementById("retry").disabled = false;
         return;
     } 
-
+    document.getElementById("retry").disabled = true;
     setTimeout(function onTick()
     {
         clearCanvas();
@@ -28,13 +29,13 @@ function main(){
         moveSnake();
         drawSnake();
         main();
-    },100
+    },125
     )
 }
 
 function restart(){
     if(has_game_ended()) {
-        dx =10;
+        dx =20;
         dy=0;
         generateFood();
         snake = [  {x: 200, y: 200},  {x: 190, y: 200},  {x: 180, y: 200},  {x: 170, y: 200},  {x: 160, y: 200}];
@@ -43,19 +44,18 @@ function restart(){
 }
 
 //On Start, clear the canvas and draw the snake
-document.getElementById('start').addEventListener('click', () => {main()});
-
+document.getElementById('start').addEventListener('click', () => {document.getElementById("start").disabled = true;main()});
+document.getElementById("retry").disabled = true;
 document.addEventListener("keydown", changeDirection);
 generateFood();
 document.getElementById('retry').addEventListener('click', () => {restart()} );
-
 // Draw a rectangle for each set of coordinates
 function drawSnakePart(snakePart)
 {
     gameBoard_ctx.fillStyle = 'orange';
     gameBoard_ctx.strokestyle = 'darkblue';
-    gameBoard_ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
-    gameBoard_ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
+    gameBoard_ctx.fillRect(snakePart.x, snakePart.y, 20, 20);
+    gameBoard_ctx.strokeRect(snakePart.x, snakePart.y, 20, 20);
 }
 
 function drawSnake()
@@ -101,33 +101,33 @@ function changeDirection(event)
     const DOWN_KEY = 40;
 
     const keyPressed = event.keyCode;
-    const goingUp = dy === -10;
-    const goingDown = dy === 10;
-    const goingRight = dx === 10;
-    const goingLeft = dx === -10;
+    const goingUp = dy === -20;
+    const goingDown = dy === 20;
+    const goingRight = dx === 20;
+    const goingLeft = dx === -20;
 
     if(keyPressed === LEFT_KEY && !goingRight)
     {
-        dx = -10;
+        dx = -20;
         dy = 0;
     }
 
     if(keyPressed === UP_KEY && !goingDown)
     {
         dx = 0;
-        dy = -10;
+        dy = -20;
     }
 
     if(keyPressed === RIGHT_KEY && !goingLeft)
     {
-        dx = 10;
+        dx = 20;
         dy = 0;
     }
 
     if(keyPressed === DOWN_KEY && !goingUp)
     {
         dx = 0;
-        dy = 10;
+        dy = 20;
     }
 }
 
@@ -140,22 +140,22 @@ function has_game_ended()
         return true
     }
     const hitLeftWall = snake[0].x < 0;  
-    const hitRightWall = snake[0].x > gameBoard.width - 10;
+    const hitRightWall = snake[0].x > gameBoard.width - 20;
     const hitToptWall = snake[0].y < 0;
-    const hitBottomWall = snake[0].y > gameBoard.height - 10;
+    const hitBottomWall = snake[0].y > gameBoard.height - 20;
    
     return hitLeftWall ||  hitRightWall || hitToptWall || hitBottomWall
 }
 
 function randomFood(min, max)
 {
-    return Math.round((Math.random() * (max-min) + min) / 10 ) * 10;
+    return Math.round((Math.random() * (max-min) + min) / 20 ) * 20;
 }
 
 function generateFood()
 {
-    food_x = randomFood(0, gameBoard.width -10);
-    food_y = randomFood(0, gameBoard.height - 10);
+    food_x = randomFood(0, gameBoard.width -20);
+    food_y = randomFood(0, gameBoard.height - 20);
     snake.forEach(function hasSnakeEatenFood(part){
         const has_eaten = part.x == food_x && part.y == food_y;
         if(has_eaten) generateFood();
@@ -166,6 +166,6 @@ function drawFood()
 {
     gameBoard_ctx.fillStyle = 'lightgreen';
     gameBoard_ctx.strokestyle = 'darkgreen';
-    gameBoard_ctx.fillRect(food_x, food_y, 10, 10);
-    gameBoard_ctx.strokeRect(food_x, food_y, 10, 10);
+    gameBoard_ctx.fillRect(food_x, food_y, 20, 20);
+    gameBoard_ctx.strokeRect(food_x, food_y, 20, 20);
 }
